@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joyeux Noël</title>
+    <style>
+        :root {
+            --christmas-red: #D42426;
+            --christmas-green: #165B33;
+            --christmas-gold: #FFD700;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--christmas-red) 0%, var(--christmas-green) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .snow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .form-container {
+            margin-top: 2rem;
+        }
+
+        input {
+            padding: 0.8rem;
+            border: 2px solid var(--christmas-gold);
+            border-radius: 5px;
+            width: 80%;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            background-color: var(--christmas-gold);
+            border: none;
+            border-radius: 5px;
+            color: var(--christmas-green);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .greeting-container {
+            display: none;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .restaurant-info {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-100vh);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .snowflake {
+            position: fixed;
+            color: white;
+            font-size: 1.5em;
+            animation: snowfall 10s linear infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .title {
+            color: var(--christmas-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .error {
+            color: #FFB6C1;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="snow"></div>
+    <div class="container">
+        <div class="form-container" id="formContainer">
+            <h1 class="title">Célébrons Noël Ensemble!</h1>
+            <form id="nameForm">
+                <input 
+                    type="text" 
+                    id="userName" 
+                    placeholder="Entrez votre nom"
+                >
+                <div class="error" id="errorMessage">Veuillez entrer votre nom</div>
+                <button type="button" id="submitButton" onclick="validateAndSubmit()">Valider</button>
+            </form>
+        </div>
+
+        <div class="greeting-container" id="greetingContainer">
+            <h1 class="title">✨ Joyeux Noël ✨</h1>
+            <p id="personalGreeting"></p>
+            <div class="restaurant-info">
+                <h2>Invitation Spéciale</h2>
+                <p>Nous vous invitons à célébrer au meilleur restaurant de Lomé:</p>
+                <h3>Le Patio - Restaurant Gastronomique</h3>
+                <p>📍 Rue du Commerce, Lomé, Togo</p>
+                <p>⭐⭐⭐⭐⭐</p>
+                <p>🕐 Ouvert de 11h00 à 23h00</p>
+                <p>📞 +228 22 21 60 60</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createSnowflakes() {
+            const snowContainer = document.querySelector('.snow');
+            const snowflakes = 50;
+
+            for (let i = 0; i < snowflakes; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.innerHTML = '❄';
+                snowflake.className = 'snowflake';
+                snowflake.style.left = `${Math.random() * 100}%`;
+                snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                snowflake.style.opacity = Math.random();
+                snowflake.style.fontSize = `${Math.random() * 10 + 10}px`;
+                snowContainer.appendChild(snowflake);
+            }
+        }
+
+        function validateAndSubmit() {
+            const userName = document.getElementById('userName').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            const input = document.getElementById('userName');
+
+            if (!userName) {
+                errorMessage.style.display = 'block';
+                input.classList.add('shake');
+                setTimeout(() => {
+                    input.classList.remove('shake');
+                }, 500);
+                return;
+            }
+
+            errorMessage.style.display = 'none';
+            document.getElementById('formContainer').style.display = 'none';
+            document.getElementById('greetingContainer').style.display = 'block';
+            document.getElementById('personalGreeting').textContent = 
+                `Cher(e) ${userName}, nous vous souhaitons un merveilleux Noël rempli de joie et de bonheur!`;
+        }
+
+        document.getElementById('userName').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                validateAndSubmit();
+            }
+        });
+
+        createSnowflakes();
+    </script>
+</body>
+</html>
